@@ -14,39 +14,51 @@ class RingBuffer:
     def append(self, item):
         # create an empty list to keep track of oldest element
         # if self.size is not self.capacity
-        if len(self.items) < self.capacity:
+        if self.storage.length < self.capacity:
             # add item to end of self.storage
             self.storage.add_to_tail(item)
-            tail_value = self.storage.tail
-            # set node as current 
-            self.current = tail_value
+            self.current = self.storage.head
+            # set node as current
+            # self.current = tail_value
             self.items.append(self.current)
         # if self.size is self.capacity
-        else:
-            # remove current item
-            print(self.current)
-            self.storage.delete(self.current)
-            self.items.remove(self.current)
-            # add item to tail
+        elif self.storage.length == self.capacity:
+            # remove head and add to tail
+            remove_head = self.storage.head
+            self.storage.remove_from_head()
             self.storage.add_to_tail(item)
-            # self.current = self.storage.tail
-            # self.items.append(self.current)
-            # print(self.items)
+
+            # Reset current position to tail
+            if remove_head == self.current:
+                self.current = self.storage.tail
 
     def get(self):
         # Note:  This is the only [] allowed
         list_buffer_contents = []
 
         # TODO: Your code here
-        while len(self.items) > 0:
-            current_head = self.storage.remove_from_head()
-            if current_head is not None:
-                list_buffer_contents.append(current_head)
-            self.items.pop(0)
-            # print(current_head)
+        current_node = self.current
+        list_buffer_contents.append(current_node.value)
+        if current_node.next:
+            next_node = current_node.next
+        else:
+            next_node = self.storage.head # from the top
+        # iterate till current node
+        while next_node != current_node:
+            list_buffer_contents.append(next_node.value)
+            if next_node.next: # node to the right? set next_node
+                next_node = next_node.next
+            else:
+                next_node = self.storage.head # go back to head
 
         return list_buffer_contents
-
+        ######### Almost worked!!
+        # while len(self.items) > 0:
+        #     current_head = self.storage.remove_from_head()
+        #     if current_head is not None:
+        #         list_buffer_contents.append(current_head)
+        #     self.items.pop(0)
+        #     # print(current_head)
 # ----------------Stretch Goal-------------------
 
 
@@ -59,6 +71,7 @@ class ArrayRingBuffer:
 
     def get(self):
         pass
+
 
 buffer = RingBuffer(5)
 buffer.append(3)
