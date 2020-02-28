@@ -18,15 +18,19 @@ class RingBuffer:
             # add item to end of self.storage
             self.storage.add_to_tail(item)
             self.current = self.storage.head
-            # set node as current
-            # self.current = tail_value
             self.items.append(self.current)
         # if self.size is self.capacity
         elif self.storage.length == self.capacity:
             # remove head and add to tail
             remove_head = self.storage.head
+            # print(len(self.items))
+            if remove_head in self.items:
+                self.items.remove(remove_head)
+            # print(len(self.items))
+            # print(remove_head)
             self.storage.remove_from_head()
             self.storage.add_to_tail(item)
+            # self
 
             # Reset current position to tail
             if remove_head == self.current:
@@ -51,14 +55,16 @@ class RingBuffer:
             else:
                 next_node = self.storage.head # go back to head
 
-        return list_buffer_contents
         ######### Almost worked!!
-        # while len(self.items) > 0:
+        # while self.storage.length > 0:
+
         #     current_head = self.storage.remove_from_head()
-        #     if current_head is not None:
+        #     print(self.storage)
+        #     if current_head:
         #         list_buffer_contents.append(current_head)
-        #     self.items.pop(0)
+        #         # self.items.pop(0)
         #     # print(current_head)
+        return list_buffer_contents
 # ----------------Stretch Goal-------------------
 
 
